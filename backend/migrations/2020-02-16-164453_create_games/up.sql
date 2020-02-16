@@ -1,5 +1,6 @@
 CREATE TABLE games
 (
-    id SERIAL PRIMARY KEY,
-    user_id VARCHAR NOT NULL references users(id)
+    id     SERIAL PRIMARY KEY,
+    start  TIMESTAMP NOT NULL,
+    active BOOLEAN   NOT NULL
 );

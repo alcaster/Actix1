@@ -1,7 +1,9 @@
 use diesel::prelude::*;
+
 extern crate diesel;
 
 use uuid::Uuid;
+use chrono::Utc;
 use crate::models;
 
 /// Run query using Diesel to get all users.
@@ -30,6 +32,7 @@ pub fn find_user_by_uid(
 
     Ok(user)
 }
+
 //
 ///// Run query using Diesel to insert a new database row and return the result.
 pub fn insert_new_user(
@@ -48,6 +51,31 @@ pub fn insert_new_user(
     };
 
     diesel::insert_into(users).values(&new_user).execute(conn)?;
-
+    let a = vec![new_user.id.clone()];
+    insert_new_game(a, &conn)?;
     Ok(new_user)
+}
+
+pub fn insert_new_game(
+    // prevent collision with `name` column imported inside the function
+    names: Vec<String>,
+    conn: &PgConnection,
+) -> Result<models::Game, diesel::result::Error> {
+    use crate::schema::games::dsl::*;
+    use crate::schema::user_games::dsl::*;
+
+    let new_game = models::NewGame {
+        start: Utc::now().naive_utc(),
+        active: false,
+    };
+    let game: models::Game = diesel::insert_into(games).values(&new_game).get_result(conn).expect("Error saving new game");
+
+    for i in &names {
+        let new_user_game = models::NewUserGame{
+            user_id: i.clone(),
+            game_id: game.id
+        };
+        diesel::insert_into(user_games).values(&new_user_game).execute(conn).expect("Error saving new user_game");
+    }
+    Ok(game)
 }
