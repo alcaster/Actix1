@@ -15,4 +15,4 @@ COPY . .
 #CMD ["target/debug/app"]
 
 RUN cargo install systemfd cargo-watch
-CMD diesel migration run && systemfd --no-pid -s 0.0.0.0:3000 -- cargo watch -x run
+CMD diesel migration run && systemfd --no-pid -s 0.0.0.0:8000 -- cargo watch -x run
