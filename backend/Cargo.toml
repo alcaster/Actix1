@@ -1,0 +1,22 @@
+[package]
+name = "app"
+version = "0.1.0"
+authors = ["Marcin Chalecki <alcaster0@gmail.com>"]
+edition = "2018"
+
+[[bin]]
+name = "app"
+path = "src/main.rs"
+
+[dependencies]
+actix-web = "2.0"
+actix-rt = "1.0"
+diesel = { version = "1.0.0", features = ["postgres", "r2d2"] }
+dotenv = "0.9.0"
+listenfd = "0.3"
+env_logger = "0.7"
+r2d2 = "0.8"
+diesel_migrations = "1.4.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "0.8", features = ["serde", "v4"]}

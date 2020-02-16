@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build: backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/:/app
+    environment:
+      RUST_BACKTRACE: 1
+    depends_on:
+      - db
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
