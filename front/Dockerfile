@@ -12,4 +12,4 @@ RUN npm install --silent
 RUN npm install react-scripts@3.0.1 -g --silent
 
 # start app
-CMD ["npm", "start"]
+CMD ["npm rebuild node-sass && npm start"]
