@@ -1,9 +1,10 @@
+use chrono::NaiveDateTime;
+
 use serde::{Serialize, Deserialize};
 
 use crate::schema::users;
 use crate::schema::games;
 use crate::schema::user_games;
-use chrono::NaiveDateTime;
 
 #[derive(Debug, Clone, Serialize, Queryable, Insertable, Identifiable, PartialEq, Associations)]
 pub struct User {
