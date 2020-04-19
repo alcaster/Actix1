@@ -1,0 +1,30 @@
+use actix::{Actor, StreamHandler};
+use actix_web_actors::ws;
+
+pub(crate) struct MyWs;
+
+impl Actor for MyWs {
+    type Context = ws::WebsocketContext<Self>;
+}
+
+/// Handler for ws::Message message
+impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for MyWs {
+    fn handle(
+        &mut self,
+        msg: Result<ws::Message, ws::ProtocolError>,
+        ctx: &mut Self::Context,
+    ) {
+        match msg {
+            Ok(ws::Message::Ping(msg)) => ctx.pong(&msg),
+            Ok(ws::Message::Binary(bin)) => ctx.binary(bin),
+            Ok(ws::Message::Text(text)) => {
+                match text {
+
+                }
+                println!("{}", text);
+                ctx.text(text)
+            }
+            _ => println!("Else"),
+        }
+    }
+}

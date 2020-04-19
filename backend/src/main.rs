@@ -1,18 +1,30 @@
 #[macro_use]
 extern crate diesel;
 
-use actix_web::{get, post, App, web, HttpServer, HttpResponse, Error};
-use listenfd::ListenFd;
+
+use actix_web::{App, Error, get, HttpRequest, HttpResponse, HttpServer, post, web};
+use actix_web_actors::ws;
 use diesel::prelude::PgConnection;
 use diesel::r2d2::ConnectionManager;
 use diesel_migrations::run_pending_migrations;
+use listenfd::ListenFd;
 use uuid::Uuid;
+
+use crate::actors::MyWs;
 
 type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 mod actions;
 mod models;
 mod schema;
+mod actors;
+
+#[get("/ws")]
+async fn indexws(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
+    let resp = ws::start(MyWs {}, &req, stream);
+    println!("{:?}", resp);
+    resp
+}
 
 #[get("/")]
 async fn index() -> Result<HttpResponse, Error> {
@@ -60,8 +72,7 @@ async fn get_users(
 
     if !users.is_empty() {
         Ok(HttpResponse::Ok().json(users))
-    }
-    else {
+    } else {
         let res = HttpResponse::NotFound()
             .body(format!("No users found"));
         Ok(res)
@@ -114,6 +125,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_user)
             .service(add_user)
             .service(get_users)
+            .service(indexws)
     );
 
     let mut listenfd = ListenFd::from_env();
