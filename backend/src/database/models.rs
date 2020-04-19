@@ -1,8 +1,8 @@
 use serde::{Serialize, Deserialize};
 
-use crate::schema::users;
-use crate::schema::games;
-use crate::schema::user_games;
+use crate::database::schema::users;
+use crate::database::schema::games;
+use crate::database::schema::user_games;
 use chrono::NaiveDateTime;
 
 #[derive(Debug, Clone, Serialize, Queryable, Insertable, Identifiable, PartialEq, Associations)]

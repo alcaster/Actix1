@@ -4,13 +4,13 @@ extern crate diesel;
 
 use uuid::Uuid;
 use chrono::Utc;
-use crate::models;
+use crate::database::models;
 
 /// Run query using Diesel to get all users.
 pub fn get_all_users(
     conn: &PgConnection,
 ) -> Result<Vec<models::User>, diesel::result::Error> {
-    use crate::schema::users::dsl::*;
+    use crate::database::schema::users::dsl::*;
 
     let all_users = users
         .load::<models::User>(conn);
@@ -23,7 +23,7 @@ pub fn find_user_by_uid(
     uid: Uuid,
     conn: &PgConnection,
 ) -> Result<Option<models::User>, diesel::result::Error> {
-    use crate::schema::users::dsl::*;
+    use crate::database::schema::users::dsl::*;
 
     let user = users
         .filter(id.eq(uid.to_string()))
@@ -43,7 +43,7 @@ pub fn insert_new_user(
     // It is common when using Diesel with Actix web to import schema-related
     // modules inside a function's scope (rather than the normal module's scope)
     // to prevent import collisions and namespace pollution.
-    use crate::schema::users::dsl::*;
+    use crate::database::schema::users::dsl::*;
 
     let new_user = models::User {
         id: Uuid::new_v4().to_string(),
@@ -61,8 +61,8 @@ pub fn insert_new_game(
     names: Vec<String>,
     conn: &PgConnection,
 ) -> Result<models::Game, diesel::result::Error> {
-    use crate::schema::games::dsl::*;
-    use crate::schema::user_games::dsl::*;
+    use crate::database::schema::games::dsl::*;
+    use crate::database::schema::user_games::dsl::*;
 
     let new_game = models::NewGame {
         start: Utc::now().naive_utc(),

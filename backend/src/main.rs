@@ -11,12 +11,11 @@ use listenfd::ListenFd;
 use uuid::Uuid;
 
 use crate::actors::MyWs;
+use crate::database::{actions, models};
 
 type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
-mod actions;
-mod models;
-mod schema;
+mod database;
 mod actors;
 
 #[get("/ws")]

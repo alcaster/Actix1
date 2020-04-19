@@ -18,9 +18,9 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for MyWs {
             Ok(ws::Message::Ping(msg)) => ctx.pong(&msg),
             Ok(ws::Message::Binary(bin)) => ctx.binary(bin),
             Ok(ws::Message::Text(text)) => {
-                match text {
-
-                }
+                // match text {
+                //
+                // }
                 println!("{}", text);
                 ctx.text(text)
             }
